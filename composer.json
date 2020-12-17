@@ -32,7 +32,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Aiman\\MenuBuilder\\MenuBuilderServiceProvider"
+                "Aiman\\MenuBuilder\\ToolServiceProvider"
             ]
         }
     },
