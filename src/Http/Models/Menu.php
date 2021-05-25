@@ -2,11 +2,11 @@
 
 namespace Aiman\MenuBuilder\Http\Models;
 
-use Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
-use Aiman\MenuBuilder\Http\Models\MenuItems;
+use Str;
 
 class Menu extends Model
 {
@@ -35,7 +35,7 @@ class Menu extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function items(): HasMany
     {
@@ -43,7 +43,7 @@ class Menu extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function parentItems(): HasMany
     {
@@ -58,9 +58,9 @@ class Menu extends Model
      *
      * @return  Collection
      */
-    public function optionsMenu()
+    public function optionsMenu(): Collection
     {
-        return $this->parentItems()//->where('enabled', 1)
+        return $this->parentItems()
         ->orderby('parent_id')
             ->orderby('order')
             ->orderby('name')
@@ -72,7 +72,7 @@ class Menu extends Model
      *
      * @return  Collection
      */
-    public function optionsMenuEnabled()
+    public function optionsMenuEnabled(): Collection
     {
         return $this->parentItems;
     }
@@ -80,17 +80,19 @@ class Menu extends Model
     /**
      * Render current menu items
      *
-     * @param   string $parentTag
-     * @param   string $childTag
-     * @param   string $parentClass
-     * @param   string $childClass
+     * @param string $parentTag
+     * @param string $childTag
+     * @param string $parentClass
+     * @param string $childClass
      *
+     * @param bool $withChildren
+     * @param bool $withActive
      * @return  string
      */
-    public function render($parentTag = null, $childTag = null, $parentClass = null, $childClass = null, $withChildren, $withActive)
+    public function render($parentTag = null, $childTag = null, $parentClass = null, $childClass = null, $withChildren = true, $withActive = true): string
     {
-        $this->defaultParentTag = ($parentTag !== null) ? $parentTag : $this->defaultParentTag;
-        $this->defaultChildTag = ($childTag !== null) ? $childTag : $this->defaultChildTag;
+        $this->defaultParentTag = $parentTag ?? $this->defaultParentTag;
+        $this->defaultChildTag = $childTag ?? $this->defaultChildTag;
         $this->parentClass = $parentClass;
         $this->withChildren = $withChildren;
         $this->withActive = $withActive;
@@ -108,7 +110,7 @@ class Menu extends Model
      *
      * @return  string
      */
-    private function renderItem($items)
+    private function renderItem($items): string
     {
         $menu = '';
         $current_route = Route::currentRouteName();
@@ -144,13 +146,14 @@ class Menu extends Model
     }
 
     /**
-     * Generate htaml tags for parents
+     * Generate html tags for parents
      *
-     * @param   string $content
+     * @param string $content
      *
+     * @param null $childClass
      * @return  string
      */
-    private function parentHtmlBuilder($content, $childClass = null)
+    private function parentHtmlBuilder($content, $childClass = null): string
     {
         return $this->buildTag($this->defaultParentTag, $childClass ?? $this->parentClass)
             . $content
@@ -160,12 +163,13 @@ class Menu extends Model
     /**
      * Create html open tag for given tag
      *
-     * @param   string $tag
-     * @param   string | null $class
+     * @param string $tag
+     * @param string | null $class
      *
+     * @param bool $active
      * @return  string
      */
-    private function buildTag($tag, $class = null, $active = false)
+    private function buildTag($tag, $class = null, $active = false): string
     {
         $activeClass = $active ? 'active' : '';
         return "<{$tag} class='{$activeClass} {$class}'>";
@@ -178,7 +182,7 @@ class Menu extends Model
      *
      * @return  string
      */
-    private function closeTag($tag)
+    private function closeTag($tag): string
     {
         return "</{$tag}>";
     }
