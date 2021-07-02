@@ -2,7 +2,7 @@
 
 namespace Aiman\MenuBuilder\Http\Controllers;
 
-use Aiman\MenuBuilder\Http\Models\Language;
+use Aiman\MenuBuilder\Models\Language;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Aiman\MenuBuilder\Http\Models\Menu;

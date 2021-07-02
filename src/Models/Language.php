@@ -1,6 +1,6 @@
 <?php
 
-namespace Aiman\MenuBuilder\Http\Models;
+namespace Aiman\MenuBuilder\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
